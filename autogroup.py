@@ -60,7 +60,8 @@ Start split
 inputDir = directoryFormat(sys.argv[1],"in")
 outputDir = directoryFormat(sys.argv[2],"out")
 inputDirs = os.listdir(inputDir)
-block_size = math.ceil(len(inputDirs)/thread_number)
+block_size = int(math.ceil(len(inputDirs)/thread_number))
+
 Dir_arr = list(chunks(inputDirs,block_size))
 Dir_len = len(Dir_arr)
 
