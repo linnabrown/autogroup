@@ -39,6 +39,8 @@ def directoryFormat(dirname, i_or_o):
 def run_anti_crispr(i, inputDir, block_size, outputDir):
     inputDirs = os.listdir(inputDir)
     files_matrix = list(chunks(inputDirs,block_size))
+    if not os.path.exists( "log-%s.txt" % ( str(i) ) ):
+        fw = open("log-%s.txt"%(str(i)),"w")
 
     for j in range(len(files_matrix[i])):
         genome_full_path = inputDir + files_matrix[i][j]
@@ -51,15 +53,14 @@ def run_anti_crispr(i, inputDir, block_size, outputDir):
                     if filename.endswith(suffix):
                         fn[suffix]= genome_full_path + '/' + filename
                         break
-            anti_crispr = Popen(['python', 'acr_aca_finder/acr_aca_cri_runner.py', '-f', fn[".gff"],\
+            anti_crispr = Popen(['python3', 'acr_aca_finder/acr_aca_cri_runner.py', '-f', fn[".gff"],\
             '-a', fn[".faa"], '-n', fn[".fna"], '-o', outputDir + files_matrix[i][j] ])
             anti_crispr.wait()
-            print("%s-%s [%s] OK"%( str(i), str(j), files_matrix[i][j] ))
+            log_print="%s-%s\t[%s]\tOK" % ( str(i), str(j), files_matrix[i][j] )
         else:
-            if not os.path.exists( "error-log-%s.txt" % ( str(i) ) ):
-                fw = open("error-log-%s.txt"%(str(i)),"w")
-            print("%s-%s [%s] BAD"%( str(i), str(j), files_matrix[i][j]))
-            fw.write("%s-%s [%s] BAD"%( str(i), str(j), files_matrix[i][j]))
+            log_print = "%s-%s\t[%s]\tBAD" % ( str(i), str(j), files_matrix[i][j] )
+        print(log_print)
+        fw.write(log_print)
 
 '''
 I/O Area
