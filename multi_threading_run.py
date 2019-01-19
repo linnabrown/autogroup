@@ -10,7 +10,7 @@ python multi_threading_run.py <input_directory> <output_directory> [<# of thread
 
 python multi_threading_run.py input_dir output_dir 2
 
-Put it into the same directory of acr_aca_finder!!!
+Put it into the directory of acr_aca_finder!!!
 '''
 '''
 Function Area
@@ -39,9 +39,10 @@ def directoryFormat(dirname, i_or_o):
 def run_anti_crispr(i, inputDir, block_size, outputDir):
     inputDirs = os.listdir(inputDir)
     files_matrix = list(chunks(inputDirs,block_size))
-    if not os.path.exists( "log-%s.txt" % ( str(i) ) ):
-        fw = open("log-%s.txt"%(str(i)),"w")
-
+    if not os.path.exists(outputDir + "logs"):
+        os.makedirs(outputDir + "logs")
+    if not os.path.exists( "%slogs/log-%s.txt" % ( outputDir, str(i) ) ):
+        fw = open("%slogs/log-%s.txt"%(outputDir, str(i)),"w")
     for j in range(len(files_matrix[i])):
         genome_full_path = inputDir + files_matrix[i][j]
         if os.path.isdir(genome_full_path):
@@ -53,9 +54,11 @@ def run_anti_crispr(i, inputDir, block_size, outputDir):
                     if filename.endswith(suffix):
                         fn[suffix]= genome_full_path + '/' + filename
                         break
-            anti_crispr = Popen(['python3', 'acr_aca_finder/acr_aca_cri_runner.py', '-f', fn[".gff"],\
+
+            anti_crispr = Popen(['python3', 'acr_aca_cri_runner.py', '-f', fn[".gff"],\
             '-a', fn[".faa"], '-n', fn[".fna"], '-o', outputDir + files_matrix[i][j] ])
             anti_crispr.wait()
+
             log_print="%s-%s\t[%s]\tOK" % ( str(i), str(j), files_matrix[i][j] )
         else:
             log_print = "%s-%s\t[%s]\tBAD" % ( str(i), str(j), files_matrix[i][j] )
