@@ -69,4 +69,11 @@ for i in range(Dir_len):
     print(i)
     os.makedirs( outputDir + str(i))
     for j in range(len(Dir_arr[i])):
-        os.system("cp %s%s %s%s/" % (inputDir, Dir_arr[i][j], outputDir, str(i)))
+        newFile = inputDir + Dir_arr[i][j]
+        if os.path.isdir(newFile):
+            DIR_OR_FILE = "-r"
+        else if os.path.isfile(newFile):
+            DIR_OR_FILE =""
+        else:
+            sys.exit(0)
+        os.system("cp %s %s%s %s%s/" % (DIR_OR_FILE, inputDir, Dir_arr[i][j], outputDir, str(i)))
