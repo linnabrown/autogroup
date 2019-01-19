@@ -72,7 +72,7 @@ for i in range(Dir_len):
         newFile = inputDir + Dir_arr[i][j]
         if os.path.isdir(newFile):
             DIR_OR_FILE = "-r"
-        else if os.path.isfile(newFile):
+        elif os.path.isfile(newFile):
             DIR_OR_FILE =""
         else:
             sys.exit(0)
